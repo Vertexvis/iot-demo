@@ -1,20 +1,37 @@
 import { useRouter } from "next/router";
 import React from "react";
-import { useHotkeys } from "react-hotkeys-hook";
 
 import {
   Configuration,
-  DefaultCredentials,
   head,
   StreamCredentials,
+  WindturbineCredentials,
 } from "../lib/config";
 import { FileData } from "../lib/files";
+import { useKeyListener } from "../lib/key-listener";
 import { Metadata, toMetadata } from "../lib/metadata";
-import { selectByHit } from "../lib/scene-items";
+import { flyToSuppliedId } from "../lib/scene-camera";
+import {
+  applyAndShowBySuppliedIds,
+  applyGroupsBySuppliedIds,
+  clearAll,
+  handleHit,
+  hideBySuppliedId,
+} from "../lib/scene-items";
+import {
+  Asset,
+  getAssets,
+  getData,
+  getFaults,
+  getTimeSeriesData,
+  RawSensors,
+  sensorsToItemSuppliedIds,
+  TimeSeriesData,
+} from "../lib/time-series";
 import { useViewer } from "../lib/viewer";
-import { Header } from "./Header";
+import { BottomDrawer, Content } from "./BottomDrawer";
 import { Layout, RightDrawerWidth } from "./Layout";
-import { encodeCreds, OpenDialog } from "./OpenScene";
+import { encodeCreds } from "./OpenScene";
 import { RightDrawer } from "./RightDrawer";
 import { Viewer } from "./Viewer";
 
@@ -23,76 +40,236 @@ export interface Props {
   readonly files: FileData[];
 }
 
-export function Home({ files, config: { network } }: Props): JSX.Element {
+export function Home({ config: { network } }: Props): JSX.Element {
+  const keys = useKeyListener();
   const router = useRouter();
   const viewer = useViewer();
+  const [asset, setAsset] = React.useState<Asset>("R8071");
+  const [content, setContent] = React.useState<Content>(undefined);
   const [credentials, setCredentials] = React.useState<
     StreamCredentials | undefined
   >();
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [, setData] = React.useState<RawSensors>(getData(asset));
+  const [ghosted, setGhosted] = React.useState(false);
   const [metadata, setMetadata] = React.useState<Metadata | undefined>();
+  const [timeSeriesData, setTimeSeriesData] = React.useState<TimeSeriesData>({
+    ids: [],
+    sensors: {},
+    sensorsMeta: [],
+  });
+  const [ts, setTs] = React.useState("");
+  const [sensor, setSensor] = React.useState("");
+  const [sensorMapping, setSensorMapping] = React.useState({});
+  const [shownSensors, setShownSensors] = React.useState<Set<string>>(
+    new Set()
+  );
+  const [checked, setChecked] = React.useState(true);
+  const onHighLightSensors = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+    setGhosted(event.target.checked);
+  };
+  React.useEffect(() => {
+    async function applyAndShowOrHideBySensorId(
+      id: string,
+      apply: boolean,
+      all: boolean
+    ): Promise<void> {
+      const meta = timeSeriesData.sensors[id].meta;
+      const suppliedIds = meta.itemSuppliedIds;
 
+      await (apply
+        ? applyAndShowBySuppliedIds({
+            all,
+            group: { color: meta.tsData[ts].color, suppliedIds },
+            viewer: viewer.ref.current,
+          })
+        : hideBySuppliedId({
+            hide: ghosted,
+            suppliedIds,
+            viewer: viewer.ref.current,
+          }));
+    }
+    if (!viewer.isReady) {
+      return;
+    }
+    const numSensors = shownSensors.size;
+    if (numSensors === 0) {
+      clearAll({
+        showAll: ghosted,
+        viewer: viewer.ref.current,
+      });
+    } else {
+      shownSensors.forEach((id) =>
+        applyAndShowOrHideBySensorId(
+          id,
+          checked,
+          checked && shownSensors.size === 0 && numSensors === 1
+        )
+      );
+    }
+  }, [
+    checked,
+    ghosted,
+    shownSensors,
+    timeSeriesData.sensors,
+    ts,
+    viewer.isReady,
+    viewer.ref,
+  ]);
+  React.useEffect(() => {
+    const noShownSensors = new Set<string>();
+    if (checked) {
+      // set all sensors as "shown"
+      const showAllSensors = new Set(
+        timeSeriesData.sensorsMeta.map((meta) => meta.id)
+      );
+      setShownSensors(showAllSensors);
+    } else {
+      setShownSensors(noShownSensors);
+    }
+  }, [checked, timeSeriesData.sensorsMeta]);
   // Prefer credentials in URL to enable easy scene sharing. If empty, use defaults.
   React.useEffect(() => {
     if (!router.isReady) return;
 
     setCredentials({
-      clientId: head(router.query.clientId) || DefaultCredentials.clientId,
-      streamKey: head(router.query.streamKey) || DefaultCredentials.streamKey,
+      clientId: head(router.query.clientId) || WindturbineCredentials.clientId,
+      streamKey:
+        head(router.query.streamKey) || WindturbineCredentials.streamKey,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady]);
-
-  // On credentials changes, update URL.
   React.useEffect(() => {
-    if (credentials) router.push(encodeCreds(credentials));
+    if (!credentials) return;
+
+    router.push(encodeCreds(credentials));
+    reset();
+    const sk = credentials.streamKey;
+    const m = sensorsToItemSuppliedIds(sk);
+    setSensorMapping(m);
+    const a = getAssets(sk)[0];
+    setAsset(a);
+    const d = getData(a);
+    setData(d);
+    const tsd = getTimeSeriesData(a, d, m);
+    setTimeSeriesData(tsd);
+    setTs(
+      tsd.sensors[tsd.ids[0]] ? tsd.sensors[tsd.ids[0]].data[0].timestamp : ""
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credentials]);
 
-  // Open dialog if 'o' key pressed
-  useHotkeys("o", () => setDialogOpen(true), { keyup: true });
+  React.useEffect(() => {
+    const tsd = timeSeriesData;
+    setSensor(tsd.sensorsMeta[0] ? tsd.sensorsMeta[0].id : "");
+  }, [timeSeriesData]);
 
+  async function updateTimestamp(timestamp: string): Promise<void> {
+    await colorSensors(timestamp);
+    setTs(timestamp);
+  }
+
+  async function colorSensors(
+    timestamp: string,
+    tsd: TimeSeriesData = timeSeriesData
+  ): Promise<void> {
+    if (shownSensors.size === 0) return;
+
+    await applyGroupsBySuppliedIds({
+      apply: true,
+      groups: [...shownSensors].map((sId) => {
+        const meta = tsd.sensors[sId].meta;
+        return {
+          color: meta.tsData[timestamp].color,
+          suppliedIds: meta.itemSuppliedIds,
+        };
+      }),
+      viewer: viewer.ref.current,
+    });
+  }
+  async function reset(): Promise<void> {
+    setShownSensors(new Set());
+    await clearAll({ showAll: ghosted, viewer: viewer.ref.current });
+  }
   return router.isReady && credentials ? (
     <Layout
-      header={<Header onOpenSceneClick={() => setDialogOpen(true)} />}
+      bottomDrawer={
+        viewer.isReady && (
+          <BottomDrawer
+            content={content}
+            onContent={setContent}
+            onSelect={(timestamp) => updateTimestamp(timestamp)}
+            sensor={timeSeriesData.sensors[sensor]}
+            timestamp={ts}
+            onHighLightSensors={onHighLightSensors}
+            sensors={timeSeriesData.ids.map((id) => timeSeriesData.sensors[id])}
+            overlayIot={checked}
+          />
+        )
+      }
       main={
         viewer.isReady && (
           <Viewer
             config={JSON.stringify({ network })}
             credentials={credentials}
-            onSelect={async (hit) => {
-              console.debug({
-                hitNormal: hit?.hitNormal,
-                hitPoint: hit?.hitPoint,
-                sceneItemId: hit?.itemId?.hex,
-                sceneItemSuppliedId: hit?.itemSuppliedId?.value,
-              });
-              await selectByHit({
-                deselectItemId: metadata?.itemId,
-                hit,
-                viewer: viewer.ref.current,
-              });
+            onSelect={(detail) => {
+              console.info(detail);
+              const hit = {
+                itemId: detail?.itemId,
+                itemSuppliedId: detail?.itemSuppliedId,
+                partRevisionId: detail?.partRevisionId,
+                partId: detail?.partId,
+                suppliedPartRevisionId: detail?.suppliedPartRevisionId,
+                metadataProperties: detail?.metadataProperties,
+              };
               setMetadata(toMetadata({ hit }));
+              return handleHit({ detail, hit, viewer: viewer.ref.current });
             }}
             viewer={viewer.ref}
           />
         )
       }
-      rightDrawer={<RightDrawer files={files} metadata={metadata} open />}
-      rightDrawerWidth={RightDrawerWidth}
-    >
-      {dialogOpen && (
-        <OpenDialog
-          credentials={credentials}
-          onClose={() => setDialogOpen(false)}
-          onConfirm={(cs) => {
-            setCredentials(cs);
-            setDialogOpen(false);
+      rightDrawer={
+        <RightDrawer
+          assets={{
+            assets: getAssets(credentials.streamKey),
+            onSelect: async (a: Asset) => {
+              setAsset(a);
+              console.log(a);
+              const d = getData(a);
+              setData(d);
+              const tsd = getTimeSeriesData(a, d, sensorMapping);
+              setTimeSeriesData(tsd);
+              await colorSensors(ts, tsd);
+            },
+            selected: asset,
           }}
-          open={dialogOpen}
+          metadata={metadata}
+          open={Boolean(open)}
+          sensors={{
+            list: timeSeriesData.sensorsMeta,
+            onSelect: async (id) => {
+              setSensor(id);
+              if (shownSensors.has(id) && keys.alt) {
+                await flyToSuppliedId({
+                  suppliedId:
+                    timeSeriesData.sensors[id].meta.itemSuppliedIds[0],
+                  viewer: viewer.ref.current,
+                });
+              }
+            },
+            selected: sensor,
+            selectedTs: ts,
+          }}
+          faults={{
+            faults: getFaults(asset),
+            selected: ts,
+            onSelect: (timestamp) => updateTimestamp(timestamp),
+          }}
         />
-      )}
-    </Layout>
+      }
+      rightDrawerWidth={RightDrawerWidth}
+    ></Layout>
   ) : (
     <></>
   );

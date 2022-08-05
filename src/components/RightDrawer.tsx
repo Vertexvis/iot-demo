@@ -1,4 +1,5 @@
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Drawer, { drawerClasses } from "@mui/material/Drawer";
@@ -6,16 +7,19 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-import { FileData } from "../lib/files";
 import { Metadata } from "../lib/metadata";
+import { AssetProps, Assets } from "./Assets";
+import { FaultProps, Faults } from "./Faults";
 import { RightDrawerWidth } from "./Layout";
 import { MetadataProperties } from "./MetadataProperties";
-import { RecentFiles } from "./RecentFiles";
+import { SensorProps, Sensors } from "./Sensors";
 
 interface Props {
-  readonly files: FileData[];
+  readonly assets: AssetProps;
   readonly metadata?: Metadata;
   readonly open: boolean;
+  readonly sensors: SensorProps;
+  readonly faults: FaultProps;
 }
 
 interface TitleProps {
@@ -26,7 +30,13 @@ const Title = styled((props: TitleProps) => (
   <Typography variant="body2" {...props} />
 ))(() => ({ textTransform: "uppercase" }));
 
-export function RightDrawer({ files, metadata, open }: Props): JSX.Element {
+export function RightDrawer({
+  assets,
+  metadata,
+  open,
+  sensors,
+  faults,
+}: Props): JSX.Element {
   return (
     <Drawer
       anchor="right"
@@ -39,17 +49,36 @@ export function RightDrawer({ files, metadata, open }: Props): JSX.Element {
       }}
       variant="persistent"
     >
+      {" "}
+      <Accordion defaultExpanded>
+        <AccordionSummary  expandIcon={<ExpandMoreIcon />}>
+          <Typography sx={{ textTransform: "uppercase" }} variant="body2">
+            Assets
+          </Typography>
+        </AccordionSummary>
+        <Assets {...assets} />
+      </Accordion>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography sx={{ textTransform: "uppercase" }} variant="body2">
+            Fault Codes
+          </Typography>
+        </AccordionSummary>
+        <Faults {...faults} />
+      </Accordion>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography sx={{ textTransform: "uppercase" }} variant="body2">
+            Sensors
+          </Typography>
+        </AccordionSummary>
+        <Sensors {...sensors} />
+      </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMore />}>
           <Title>Metadata Properties</Title>
         </AccordionSummary>
         <MetadataProperties metadata={metadata} />
-      </Accordion>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMore />}>
-          <Title>Recent Files</Title>
-        </AccordionSummary>
-        <RecentFiles files={files} />
       </Accordion>
     </Drawer>
   );

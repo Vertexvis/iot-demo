@@ -41,7 +41,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
     <React.StrictMode>
       <CacheProvider value={cache}>
         <Head>
-          <title>Vertex Starter</title>
+          <title>Vertex IOT</title>
           <link rel="icon" href="/favicon-512x512.png" />
           <meta
             name="viewport"
@@ -49,7 +49,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
           />
           <meta
             name="description"
-            content="Quickly and easily build your own digital twin prototype application using the Vertex platform."
+            content="Example of how to visualize IoT time series data using the Vertex platform."
           />
         </Head>
         <ThemeProvider theme={theme}>

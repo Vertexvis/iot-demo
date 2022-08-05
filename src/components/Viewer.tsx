@@ -1,5 +1,4 @@
 /* @jsx jsx */ /** @jsxRuntime classic */ import { jsx } from "@emotion/react";
-import { vertexvis } from "@vertexvis/frame-streaming-protos";
 import type { JSX as ViewerJSX, TapEventDetails } from "@vertexvis/viewer";
 import {
   VertexViewer,
@@ -29,7 +28,9 @@ type ViewerComponentType = React.ComponentType<
 type HOCViewerProps = React.RefAttributes<HTMLVertexViewerElement>;
 
 interface OnSelectProps extends HOCViewerProps {
-  readonly onSelect: (hit?: vertexvis.protobuf.stream.IHit) => Promise<void>;
+  readonly onSelect:  (
+    detail: TapEventDetails
+  ) => Promise<void>;
 }
 
 export const AnimationDurationMs = 1500;
