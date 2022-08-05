@@ -1,46 +1,153 @@
 import { vertexvis } from "@vertexvis/frame-streaming-protos";
-import { ColorMaterial, Components } from "@vertexvis/viewer";
+import { ColorMaterial, Components, TapEventDetails } from "@vertexvis/viewer";
 
-interface Req {
+import { SelectColor } from "./colors";
+
+export interface Req {
   readonly viewer: Components.VertexViewer | null;
 }
 
-interface SelectByHitReq extends Req {
-  readonly deselectItemId?: string;
+interface ColorGroup {
+  readonly color: string;
+  readonly suppliedIds: string[];
+}
+
+interface ApplyReq extends Req {
+  readonly apply: boolean;
+}
+
+interface ApplyGroupsBySuppliedIdsReq extends ApplyReq {
+  readonly groups: ColorGroup[];
+}
+
+interface ApplyAndShowBySuppliedIdsReq extends Req {
+  readonly all: boolean;
+  readonly group: ColorGroup;
+}
+
+interface HideSuppliedIdReq extends Req {
+  readonly hide: boolean;
+  readonly suppliedIds: string[];
+}
+
+interface HandleHitReq extends Req {
+  readonly detail: TapEventDetails;
   readonly hit?: vertexvis.protobuf.stream.IHit;
 }
 
-const SelectColor = {
-  ...ColorMaterial.create(255, 255, 0),
-  glossiness: 4,
-  specular: { r: 255, g: 255, b: 255, a: 0 },
-};
-
-export async function selectByHit({
-  deselectItemId,
-  hit,
+export async function applyGroupsBySuppliedIds({
+  apply,
+  groups,
   viewer,
-}: SelectByHitReq): Promise<void> {
+}: ApplyGroupsBySuppliedIdsReq): Promise<void> {
   if (viewer == null) return;
 
   const scene = await viewer.scene();
   if (scene == null) return;
 
-  const itemId = hit?.itemId?.hex;
-  if (itemId) {
+  await scene
+    .items((op) =>
+      groups.map((g) => {
+        const w = op.where((q) => q.withSuppliedIds(g.suppliedIds));
+        return apply
+          ? w.materialOverride(ColorMaterial.fromHex(g.color, 178))
+          : w.clearMaterialOverrides();
+      })
+    )
+    ?.execute();
+}
+
+export async function applyAndShowBySuppliedIds({
+  all,
+  group: { color, suppliedIds },
+  viewer,
+}: ApplyAndShowBySuppliedIdsReq): Promise<void> {
+  if (viewer == null || viewer === undefined) {
+    return;
+  }
+  const scene = await viewer.scene();
+  if (scene == null) return;
+
+  await scene
+    .items((op) => [
+      ...(all ? [op.where((q) => q.all()).hide()] : []),
+      op
+        .where((q) => q.withSuppliedIds(suppliedIds))
+        .materialOverride(ColorMaterial.fromHex(color, 178))
+        .show(),
+    ])
+    .execute();
+}
+
+export async function hideBySuppliedId({
+  hide,
+  suppliedIds,
+  viewer,
+}: HideSuppliedIdReq): Promise<void> {
+  if (viewer == null) return;
+
+  const scene = await viewer.scene();
+  if (scene == null) return;
+
+  await scene
+    .items((op) => {
+      const w = op.where((q) => q.withSuppliedIds(suppliedIds));
+      return hide
+        ? w.clearMaterialOverrides().hide()
+        : w.clearMaterialOverrides();
+    })
+    .execute();
+}
+
+export async function handleHit({
+  detail,
+  hit,
+  viewer,
+}: HandleHitReq): Promise<void> {
+  if (viewer == null) return;
+
+  const scene = await viewer.scene();
+  if (scene == null) return;
+
+  const id = hit?.itemId?.hex;
+  if (id) {
     await scene
       .items((op) => {
+        const idQuery = op.where((q) => q.withItemId(id));
         return [
-          ...(deselectItemId
-            ? [op.where((q) => q.withItemId(deselectItemId)).deselect()]
-            : []),
-          op.where((q) => q.withItemId(itemId)).select(SelectColor),
+          op.where((q) => q.all()).deselect(),
+          // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons#return_value
+          detail.buttons === 2 ? idQuery.hide() : idQuery.select(SelectColor),
         ];
       })
       .execute();
-  } else if (deselectItemId) {
-    await scene
-      .items((op) => [op.where((q) => q.withItemId(deselectItemId)).deselect()])
-      .execute();
+  } else {
+    await scene.items((op) => op.where((q) => q.all()).deselect()).execute();
   }
+}
+
+export async function clearAll({
+  showAll,
+  viewer,
+}: Req & { showAll: boolean }): Promise<void> {
+  if (viewer == null) return;
+  viewer?.stream?.update({
+    streamAttributes: {
+      experimentalGhosting: {
+        enabled: { value: showAll },
+        opacity: { value: 0.7 },
+      }
+    }
+  })
+  const scene = await viewer.scene();
+  if (scene == null) return;
+
+  await scene
+    .items((op) => {
+      const w = op.where((q) => q.all());
+      return showAll
+        ? w.clearMaterialOverrides().show()
+        : w.clearMaterialOverrides();
+    })
+    .execute();
 }

@@ -18,3 +18,10 @@ export function easeOutEntering(theme: Theme): Transition {
     duration: theme.transitions.duration.enteringScreen,
   };
 }
+
+export function sharpEntering(theme: Theme): Transition {
+  return {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  };
+}

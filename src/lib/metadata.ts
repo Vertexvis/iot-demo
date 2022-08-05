@@ -19,7 +19,7 @@ const PartRevSuppliedId = "VERTEX_PART_REVISION_SUPPLIED_ID";
 export function toMetadata({
   hit,
 }: {
-  readonly hit?: vertexvis.protobuf.stream.IHit | null;
+  readonly hit?: TapDet | null;
 }): Metadata | undefined {
   if (hit == null) return;
 
