@@ -113,7 +113,6 @@ export function Home({ config: { network } }: Props): JSX.Element {
     viewer.isReady,
     viewer.ref,
   ]);
-  React.useEffect(() => {});
   React.useEffect(() => {
     const noShownSensors = new Set<string>();
     if (checked) {
