@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import React from "react";
+import { DataGrid, GridColDef, GridSelectionModel } from "@mui/x-data-grid";
+import React, { useCallback, useRef } from "react";
 
 import { formatValue, Sensor } from "../lib/time-series";
 
@@ -23,13 +23,25 @@ const columns: GridColDef[] = [
 ];
 
 export function TimeSeriesDataGrid({
-  onSelect,
   sensor,
   timestamp,
-}: Props): JSX.Element {
+onSelect}: Props): JSX.Element {
+  const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([timestamp]); 
+  const gridRef = useRef(null);
+  const scrollToRow = useCallback(
+    (i) => {
+      const rowEl = gridRef?.current?.querySelector(`div[data-id="${i}"]`);
+      if (rowEl != null) rowEl.scrollIntoView();
+    },
+    [gridRef]
+  );
+  React.useEffect(()=>{
+   setSelectionModel(timestamp)
+  },[timestamp])
   return (
     <Box display="flex" flexGrow={1}>
       <DataGrid
+        ref={gridRef}
         disableColumnMenu
         disableColumnSelector
         disableDensitySelector
@@ -39,10 +51,14 @@ export function TimeSeriesDataGrid({
         hideFooter
         columns={columns}
         onStateChange={(e) => {
-          const ts = e.focus.cell?.id as string;
-          if (ts == null) return;
+          const ts = e.selection;
+          if (ts === undefined || ts.length == 0) return;
 
-          onSelect(ts);
+          scrollToRow(ts[0])
+        }}
+        onSelectionModelChange={(e)=>{
+          setSelectionModel(e);
+          onSelect(e[0] as string)
         }}
         rows={sensor.data.map((d) => ({
           id: d.timestamp,
@@ -51,7 +67,7 @@ export function TimeSeriesDataGrid({
           avg: formatValue(d.avg),
           std: formatValue(d.std),
         }))}
-        selectionModel={[timestamp]}
+        selectionModel={selectionModel}
       />
     </Box>
   );
