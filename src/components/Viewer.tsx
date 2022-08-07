@@ -1,5 +1,6 @@
 /* @jsx jsx */ /** @jsxRuntime classic */ import { jsx } from "@emotion/react";
 import type { JSX as ViewerJSX, TapEventDetails } from "@vertexvis/viewer";
+import { vertexvis } from "@vertexvis/frame-streaming-protos";
 import {
   VertexViewer,
   VertexViewerToolbar,
@@ -29,7 +30,7 @@ type HOCViewerProps = React.RefAttributes<HTMLVertexViewerElement>;
 
 interface OnSelectProps extends HOCViewerProps {
   readonly onSelect:  (
-    detail: TapEventDetails
+    hitItems: vertexvis.protobuf.stream.IHit
   ) => Promise<void>;
 }
 
