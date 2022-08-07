@@ -119,7 +119,6 @@ export function BottomDrawer({
       {content === "chart" && (
         <Box overflow="hidden" height="100%" width="100%">
           <TimeSeriesChart sensors={sensors} timestamp={timestamp} />
-          {/* <MultiTimeSeriesChart sensors={sensors}/> */}
         </Box>
       )}
     </Drawer>
