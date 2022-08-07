@@ -1,5 +1,6 @@
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box, Link } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Drawer, { drawerClasses } from "@mui/material/Drawer";
@@ -51,7 +52,7 @@ export function RightDrawer({
     >
       {" "}
       <Accordion defaultExpanded>
-        <AccordionSummary  expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography sx={{ textTransform: "uppercase" }} variant="body2">
             Assets
           </Typography>
@@ -76,9 +77,20 @@ export function RightDrawer({
       </Accordion>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMore />}>
-          <Title>Metadata Properties</Title>
+          <Typography sx={{ textTransform: "uppercase" }} variant="body2">
+            Source Code
+          </Typography>
         </AccordionSummary>
-        <MetadataProperties metadata={metadata} />
+        <Box>
+          <Link
+            href="https://github.com/Vertexvis/iot-demo"
+            rel="noreferrer"
+            sx={{ alignSelf: "center", mr: 2 }}
+            target="_blank"
+          >
+            View on GitHub
+          </Link>
+        </Box>
       </Accordion>
     </Drawer>
   );
