@@ -9,13 +9,14 @@ import {
 } from "../lib/config";
 import { FileData } from "../lib/files";
 import { useKeyListener } from "../lib/key-listener";
-import { Metadata, toMetadata } from "../lib/metadata";
+import { Metadata } from "../lib/metadata";
 import { flyToSuppliedId } from "../lib/scene-camera";
 import {
   applyAndShowBySuppliedIds,
   applyGroupsBySuppliedIds,
   clearAll,
   handleHit,
+  HandleHitReq,
   hideBySuppliedId,
 } from "../lib/scene-items";
 import {
@@ -50,8 +51,6 @@ export function Home({ config: { network } }: Props): JSX.Element {
     StreamCredentials | undefined
   >();
   const [, setData] = React.useState<RawSensors>(getData(asset));
-  const [ghosted, setGhosted] = React.useState(false);
-  const [metadata, setMetadata] = React.useState<Metadata | undefined>();
   const [timeSeriesData, setTimeSeriesData] = React.useState<TimeSeriesData>({
     ids: [],
     sensors: {},
@@ -63,10 +62,9 @@ export function Home({ config: { network } }: Props): JSX.Element {
   const [shownSensors, setShownSensors] = React.useState<Set<string>>(
     new Set()
   );
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = React.useState(false);
   const onHighLightSensors = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
-    setGhosted(event.target.checked);
   };
   React.useEffect(() => {
     async function applyAndShowOrHideBySensorId(
@@ -74,6 +72,9 @@ export function Home({ config: { network } }: Props): JSX.Element {
       apply: boolean,
       all: boolean
     ): Promise<void> {
+      if (!viewer.isReady) {
+        return;
+      }
       const meta = timeSeriesData.sensors[id].meta;
       const suppliedIds = meta.itemSuppliedIds;
 
@@ -84,18 +85,16 @@ export function Home({ config: { network } }: Props): JSX.Element {
             viewer: viewer.ref.current,
           })
         : hideBySuppliedId({
-            hide: ghosted,
+            hide: checked,
             suppliedIds,
             viewer: viewer.ref.current,
           }));
     }
-    if (!viewer.isReady) {
-      return;
-    }
+
     const numSensors = shownSensors.size;
     if (numSensors === 0) {
       clearAll({
-        showAll: ghosted,
+        showAll: false,
         viewer: viewer.ref.current,
       });
     } else {
@@ -103,19 +102,19 @@ export function Home({ config: { network } }: Props): JSX.Element {
         applyAndShowOrHideBySensorId(
           id,
           checked,
-          checked && shownSensors.size === 0 && numSensors === 1
+          shownSensors.size === 0 && numSensors === 1
         )
       );
     }
   }, [
     checked,
-    ghosted,
     shownSensors,
     timeSeriesData.sensors,
     ts,
     viewer.isReady,
     viewer.ref,
   ]);
+  React.useEffect(() => {});
   React.useEffect(() => {
     const noShownSensors = new Set<string>();
     if (checked) {
@@ -189,7 +188,7 @@ export function Home({ config: { network } }: Props): JSX.Element {
   }
   async function reset(): Promise<void> {
     setShownSensors(new Set());
-    await clearAll({ showAll: ghosted, viewer: viewer.ref.current });
+    await clearAll({ showAll: false, viewer: viewer.ref.current });
   }
   return router.isReady && credentials ? (
     <Layout
@@ -212,18 +211,13 @@ export function Home({ config: { network } }: Props): JSX.Element {
           <Viewer
             config={JSON.stringify({ network })}
             credentials={credentials}
-            onSelect={(detail) => {
-              console.info(detail);
-              const hit = {
-                itemId: detail?.itemId,
-                itemSuppliedId: detail?.itemSuppliedId,
-                partRevisionId: detail?.partRevisionId,
-                partId: detail?.partId,
-                suppliedPartRevisionId: detail?.suppliedPartRevisionId,
-                metadataProperties: detail?.metadataProperties,
+            onSelect={(hitItems) => {
+              console.info(hitItems);
+              const request: HandleHitReq = {
+                hit: hitItems,
+                viewer: viewer.ref.current,
               };
-              setMetadata(toMetadata({ hit }));
-              return handleHit({ detail, hit, viewer: viewer.ref.current });
+              return handleHit(request);
             }}
             viewer={viewer.ref}
           />
@@ -244,7 +238,7 @@ export function Home({ config: { network } }: Props): JSX.Element {
             },
             selected: asset,
           }}
-          metadata={metadata}
+          // metadata={metadata}
           open={Boolean(open)}
           sensors={{
             list: timeSeriesData.sensorsMeta,

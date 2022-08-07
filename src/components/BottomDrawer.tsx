@@ -25,7 +25,7 @@ interface Props {
   readonly onSelect: (timestamp: string) => Promise<void>;
   readonly sensor: Sensor;
   readonly timestamp: string;
-  readonly onHighLightSensors: (event: ChangeEvent) => void;
+  readonly onHighLightSensors: (event: ChangeEvent<HTMLInputElement>) => void;
   readonly sensors: Sensor[];
   readonly overlayIot: boolean;
 }
@@ -38,10 +38,10 @@ export function BottomDrawer({
   timestamp,
   onHighLightSensors,
   sensors,
-  overlayIot
+  overlayIot,
 }: Props): JSX.Element {
   const open = Boolean(content);
-  
+
   return (
     <Drawer
       anchor="bottom"
@@ -91,29 +91,14 @@ export function BottomDrawer({
           </ListItem>
           <ListItem>
             <FormControlLabel
-              control={
-                <Switch
-                  size="small"
-                  onChange={onHighLightSensors}
-                />
-              }
+              control={<Switch size="small" onChange={onHighLightSensors} />}
               checked={overlayIot}
               label="IOT Overlay"
             />
           </ListItem>
         </List>
         <TimeSlider onSelect={onSelect} sensor={sensor} timestamp={timestamp} />
-        <Box>
-          <Link
-            href="https://github.com/Vertexvis/iot-demo"
-            rel="noreferrer"
-            sx={{ alignSelf: "center", mr: 2 }}
-            target="_blank"
-          >
-            View on GitHub
-          </Link>
-        </Box>
-      </Box>
+      </Box> 
       {content === "data" && (
         <>
           <Typography
@@ -133,7 +118,7 @@ export function BottomDrawer({
       )}
       {content === "chart" && (
         <Box overflow="hidden" height="100%" width="100%">
-          <TimeSeriesChart sensors={sensors} timestamp={timestamp}/>
+          <TimeSeriesChart sensors={sensors} timestamp={timestamp} />
           {/* <MultiTimeSeriesChart sensors={sensors}/> */}
         </Box>
       )}
