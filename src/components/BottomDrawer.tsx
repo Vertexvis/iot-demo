@@ -3,7 +3,6 @@ import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import { FormControlLabel } from "@mui/material";
 import Box from "@mui/material/Box";
 import Drawer, { drawerClasses } from "@mui/material/Drawer";
-import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Switch from "@mui/material/Switch";
