@@ -9,7 +9,6 @@ import {
 } from "../lib/config";
 import { FileData } from "../lib/files";
 import { useKeyListener } from "../lib/key-listener";
-import { Metadata } from "../lib/metadata";
 import { flyToSuppliedId } from "../lib/scene-camera";
 import {
   applyAndShowBySuppliedIds,
@@ -32,7 +31,7 @@ import {
 import { useViewer } from "../lib/viewer";
 import { BottomDrawer, Content } from "./BottomDrawer";
 import { Layout, RightDrawerWidth } from "./Layout";
-import { encodeCreds } from "./OpenScene";
+import { encodeCreds } from "../lib/env"
 import { RightDrawer } from "./RightDrawer";
 import { Viewer } from "./Viewer";
 
