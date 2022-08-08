@@ -9,7 +9,7 @@ import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import React, { ChangeEvent } from "react";
 
-import { Sensor } from "../lib/time-series";
+import { FaultCode, Sensor } from "../lib/time-series";
 import { sharpEntering, sharpLeaving } from "../lib/transitions";
 import { BottomDrawerHeight } from "./Layout";
 import { TimeSeriesChart } from "./TimeSeriesChart";
@@ -27,6 +27,7 @@ interface Props {
   readonly onHighLightSensors: (event: ChangeEvent<HTMLInputElement>) => void;
   readonly sensors: Sensor[];
   readonly overlayIot: boolean;
+  readonly faultCodes: FaultCode[];
 }
 
 export function BottomDrawer({
@@ -38,6 +39,7 @@ export function BottomDrawer({
   onHighLightSensors,
   sensors,
   overlayIot,
+  faultCodes,
 }: Props): JSX.Element {
   const open = Boolean(content);
 
@@ -117,7 +119,7 @@ export function BottomDrawer({
       )}
       {content === "chart" && (
         <Box overflow="hidden" height="100%" width="100%">
-          <TimeSeriesChart sensors={sensors} timestamp={timestamp} />
+          <TimeSeriesChart sensors={sensors} timestamp={timestamp} faultCodes={faultCodes}/>
         </Box>
       )}
     </Drawer>

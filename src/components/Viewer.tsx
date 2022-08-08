@@ -1,6 +1,10 @@
 /* @jsx jsx */ /** @jsxRuntime classic */ import { jsx } from "@emotion/react";
-import type { JSX as ViewerJSX, TapEventDetails } from "@vertexvis/viewer";
 import { vertexvis } from "@vertexvis/frame-streaming-protos";
+import type {
+  JSX as ViewerJSX,
+  TapEventDetails,
+  VertexViewerCustomEvent,
+} from "@vertexvis/viewer";
 import {
   VertexViewer,
   VertexViewerToolbar,
@@ -29,7 +33,7 @@ type ViewerComponentType = React.ComponentType<
 type HOCViewerProps = React.RefAttributes<HTMLVertexViewerElement>;
 
 interface OnSelectProps extends HOCViewerProps {
-  readonly onSelect:  (
+  readonly onSelect: (
     hitItems: vertexvis.protobuf.stream.IHit
   ) => Promise<void>;
 }
@@ -68,7 +72,7 @@ function onTap<P extends ViewerProps>(
   WrappedViewer: ViewerComponentType
 ): React.FunctionComponent<P & OnSelectProps> {
   return function Component({ viewer, onSelect, ...props }: P & OnSelectProps) {
-    async function handleTap(e: CustomEvent<TapEventDetails>) {
+    async function handleTap(e: VertexViewerCustomEvent<TapEventDetails>) {
       if (props.onTap) props.onTap(e);
 
       if (!e.defaultPrevented) {

@@ -113,6 +113,7 @@ export function Layout({
         leftDrawerWidth={leftDrawerWidth}
         rightDrawerWidth={rightDrawerWidth}
         toolbarHeight={header ? DenseToolbarHeight : 0}
+        bottomDrawerHeight={BottomDrawerHeight}
       >
         {main}
       </Main>

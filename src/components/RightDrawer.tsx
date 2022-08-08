@@ -4,36 +4,23 @@ import { Box, Link } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Drawer, { drawerClasses } from "@mui/material/Drawer";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React from "react";
 
-import { Metadata } from "../lib/metadata";
 import { AssetProps, Assets } from "./Assets";
 import { FaultProps, Faults } from "./Faults";
 import { RightDrawerWidth } from "./Layout";
-import { MetadataProperties } from "./MetadataProperties";
 import { SensorProps, Sensors } from "./Sensors";
 
 interface Props {
   readonly assets: AssetProps;
-  readonly metadata?: Metadata;
   readonly open: boolean;
   readonly sensors: SensorProps;
   readonly faults: FaultProps;
 }
 
-interface TitleProps {
-  readonly children: React.ReactNode | React.ReactNode[];
-}
-
-const Title = styled((props: TitleProps) => (
-  <Typography variant="body2" {...props} />
-))(() => ({ textTransform: "uppercase" }));
-
 export function RightDrawer({
   assets,
-  metadata,
   open,
   sensors,
   faults,

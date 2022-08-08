@@ -25,19 +25,21 @@ const columns: GridColDef[] = [
 export function TimeSeriesDataGrid({
   sensor,
   timestamp,
-onSelect}: Props): JSX.Element {
-  const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([timestamp]); 
-  const gridRef = useRef(null);
+  onSelect,
+}: Props): JSX.Element {
+  const [selectionModel, setSelectionModel] =
+    React.useState<GridSelectionModel>([timestamp]);
+  const gridRef = useRef<HTMLDivElement>(null);
   const scrollToRow = useCallback(
-    (i) => {
+    (i: string) => {
       const rowEl = gridRef?.current?.querySelector(`div[data-id="${i}"]`);
       if (rowEl != null) rowEl.scrollIntoView();
     },
     [gridRef]
   );
-  React.useEffect(()=>{
-   setSelectionModel(timestamp)
-  },[timestamp])
+  React.useEffect(() => {
+    setSelectionModel([timestamp]);
+  }, [timestamp]);
   return (
     <Box display="flex" flexGrow={1}>
       <DataGrid
@@ -54,11 +56,11 @@ onSelect}: Props): JSX.Element {
           const ts = e.selection;
           if (ts === undefined || ts.length == 0) return;
 
-          scrollToRow(ts[0])
+          scrollToRow(ts[0]);
         }}
-        onSelectionModelChange={(e)=>{
+        onSelectionModelChange={(e) => {
           setSelectionModel(e);
-          onSelect(e[0] as string)
+          onSelect(e[0] as string);
         }}
         rows={sensor.data.map((d) => ({
           id: d.timestamp,

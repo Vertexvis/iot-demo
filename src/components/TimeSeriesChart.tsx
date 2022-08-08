@@ -3,14 +3,19 @@ import { ResponsiveLine } from "@nivo/line";
 import React from "react";
 import { useMemo } from "react";
 
-import { Sensor } from "../lib/time-series";
+import { FaultCode, Sensor } from "../lib/time-series";
 
 interface Props {
   readonly sensors: Sensor[];
   readonly timestamp: string;
+  readonly faultCodes: FaultCode[];
 }
 
-export function TimeSeriesChart({ sensors, timestamp }: Props): JSX.Element {
+export function TimeSeriesChart({
+  sensors,
+  timestamp,
+  faultCodes,
+}: Props): JSX.Element {
   const colors = useOrdinalColorScale({ scheme: "nivo" }, "id");
   // const sensors =[sensor]
   const rawData = sensors.map((s) => {
@@ -23,10 +28,17 @@ export function TimeSeriesChart({ sensors, timestamp }: Props): JSX.Element {
     };
   });
   const [hiddenIds, setHiddenIds] = React.useState<string[]>([]);
+  const [markerText, setMarkerText] = React.useState<string>("");
   const data = useMemo(
     () => rawData.filter((item) => !hiddenIds.includes(item.id)),
     [hiddenIds, rawData]
   );
+  React.useEffect(() => {
+    const faultTimes = faultCodes.find((fault) => {
+      return fault.timestamp === timestamp;
+    });
+    setMarkerText(faultTimes?.title ?? "");
+  }, [timestamp]);
   return (
     <ResponsiveLine
       data={data}
@@ -43,6 +55,7 @@ export function TimeSeriesChart({ sensors, timestamp }: Props): JSX.Element {
           axis: "x",
           value: timestamp.substring(11, 19),
           lineStyle: { stroke: "#b0413e", strokeWidth: 10, opacity: 0.2 },
+          legend: markerText,
         },
       ]}
       legends={[

@@ -7,7 +7,6 @@ import {
   StreamCredentials,
   WindturbineCredentials,
 } from "../lib/config";
-import { FileData } from "../lib/files";
 import { useKeyListener } from "../lib/key-listener";
 import { flyToSuppliedId } from "../lib/scene-camera";
 import {
@@ -31,13 +30,12 @@ import {
 import { useViewer } from "../lib/viewer";
 import { BottomDrawer, Content } from "./BottomDrawer";
 import { Layout, RightDrawerWidth } from "./Layout";
-import { encodeCreds } from "../lib/env"
+import { encodeCreds } from "../lib/env";
 import { RightDrawer } from "./RightDrawer";
 import { Viewer } from "./Viewer";
 
 export interface Props {
   readonly config: Configuration;
-  readonly files: FileData[];
 }
 
 export function Home({ config: { network } }: Props): JSX.Element {
@@ -62,6 +60,7 @@ export function Home({ config: { network } }: Props): JSX.Element {
     new Set()
   );
   const [checked, setChecked] = React.useState(false);
+  const [faults, setFaults] = React.useState(getFaults(asset));
   const onHighLightSensors = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
@@ -161,6 +160,10 @@ export function Home({ config: { network } }: Props): JSX.Element {
     setSensor(tsd.sensorsMeta[0] ? tsd.sensorsMeta[0].id : "");
   }, [timeSeriesData]);
 
+  React.useEffect(() => {
+    setFaults(getFaults(asset));
+  }, [asset]);
+
   async function updateTimestamp(timestamp: string): Promise<void> {
     await colorSensors(timestamp);
     setTs(timestamp);
@@ -201,6 +204,7 @@ export function Home({ config: { network } }: Props): JSX.Element {
             onHighLightSensors={onHighLightSensors}
             sensors={timeSeriesData.ids.map((id) => timeSeriesData.sensors[id])}
             overlayIot={checked}
+            faultCodes={faults}
           />
         )
       }
@@ -254,7 +258,7 @@ export function Home({ config: { network } }: Props): JSX.Element {
             selectedTs: ts,
           }}
           faults={{
-            faults: getFaults(asset),
+            faults: faults,
             selected: ts,
             onSelect: (timestamp) => updateTimestamp(timestamp),
           }}
