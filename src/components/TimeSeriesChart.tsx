@@ -38,7 +38,7 @@ export function TimeSeriesChart({
       return fault.timestamp === timestamp;
     });
     setMarkerText(faultTimes?.title ?? "");
-  }, [timestamp]);
+  }, [timestamp, faultCodes]);
   return (
     <ResponsiveLine
       data={data}
