@@ -1,5 +1,5 @@
 import { vertexvis } from "@vertexvis/frame-streaming-protos";
-import { ColorMaterial, Components, TapEventDetails } from "@vertexvis/viewer";
+import { ColorMaterial, Components } from "@vertexvis/viewer";
 
 import { SelectColor } from "./colors";
 
