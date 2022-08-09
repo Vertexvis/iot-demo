@@ -1,8 +1,6 @@
-# Vertex NextJS Starter
+# Vertex IoT Demo
 
-Use our starter application template using the NextJS framework.
-
-View a scene, apply camera states, and see a scene item's metadata. We built this application following best practices for integrating the Vertex platform. [Follow our guide](http://localhost:3000/docs/guides/build-your-first-app) to build a foundation, then add functionality to create your own prototype application using Vertex.
+Demonstrates mapping time series data to material properties of 3D geometry.
 
 ## Run locally in Docker
 
