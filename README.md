@@ -2,6 +2,7 @@
 
 Demonstrates mapping time series data to material properties of 3D geometry.
 
+
 ## Run locally in Docker
 
 1. Copy `.env.local.template` to `.env.local` and optionally edit values
