@@ -6,7 +6,7 @@ import React from "react";
 
 import { easeOutEntering, sharpLeaving } from "../lib/transitions";
 
-export const BottomDrawerHeight = 500;
+export const BottomDrawerHeight = 400;
 export const DenseToolbarHeight = 48;
 export const LeftDrawerWidth = 240;
 export const RightDrawerWidth = 320;

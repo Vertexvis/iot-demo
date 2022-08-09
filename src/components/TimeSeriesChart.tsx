@@ -49,6 +49,7 @@ export function TimeSeriesChart({
         type: "linear",
         stacked: true,
       }}
+      curve="catmullRom"
       useMesh={true}
       markers={[
         {
@@ -80,7 +81,8 @@ export function TimeSeriesChart({
           },
           itemHeight: 20,
           itemWidth: 70,
-          translateY: 60,
+          translateY: 40,
+          translateX: -110,
         },
       ]}
     />
