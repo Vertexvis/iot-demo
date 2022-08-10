@@ -36,7 +36,6 @@ export default function TimeSlider({
     }
     const step = sensor.data.findIndex((x) => x.timestamp === timestamp);
     setActiveStep(step);
-    // }
   }, [sensor, timestamp]);
 
   const handleNext = () => {
