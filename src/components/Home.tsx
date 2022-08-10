@@ -240,8 +240,7 @@ export function Home({ config: { network } }: Props): JSX.Element {
             },
             selected: asset,
           }}
-          // metadata={metadata}
-          open={Boolean(open)}
+          open={Boolean(content)}
           sensors={{
             list: timeSeriesData.sensorsMeta,
             onSelect: async (id) => {

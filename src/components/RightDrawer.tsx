@@ -9,7 +9,7 @@ import React from "react";
 
 import { AssetProps, Assets } from "./Assets";
 import { FaultProps, Faults } from "./Faults";
-import { RightDrawerWidth } from "./Layout";
+import { BottomDrawerHeight, RightDrawerWidth } from "./Layout";
 import { SensorProps, Sensors } from "./Sensors";
 
 interface Props {
@@ -33,9 +33,14 @@ export function RightDrawer({
         display: { sm: "block", xs: "none" },
         flexShrink: 0,
         width: RightDrawerWidth,
-        [`& .${drawerClasses.paper}`]: { width: RightDrawerWidth },
+        [`& .${drawerClasses.paper}`]: open
+        ? {
+            height: `calc(100% - ${BottomDrawerHeight}px)`,
+            width: RightDrawerWidth,
+          }
+        : { height: `calc(100% - 57px)`, width: RightDrawerWidth },
       }}
-      variant="persistent"
+      variant="permanent"
     >
       {" "}
       <Accordion defaultExpanded>

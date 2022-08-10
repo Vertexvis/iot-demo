@@ -37,6 +37,7 @@ export function Sensors({
                   key={s.id}
                   onClick={() => onSelect(s.id)}
                   selected={isSelected}
+                  
                 >
                   <TableCell>{formatValue(td.value)}</TableCell>
                   <TableCell>
