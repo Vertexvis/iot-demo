@@ -12,15 +12,19 @@ interface ColorGroup {
   readonly suppliedIds: string[];
 }
 
+interface MaterialOverrideOpacity {
+  readonly opacity: number;
+}
+
 interface ApplyReq extends Req {
   readonly apply: boolean;
 }
 
-interface ApplyGroupsBySuppliedIdsReq extends ApplyReq {
+interface ApplyGroupsBySuppliedIdsReq extends ApplyReq, MaterialOverrideOpacity {
   readonly groups: ColorGroup[];
 }
 
-interface ApplyAndShowBySuppliedIdsReq extends Req {
+interface ApplyAndShowBySuppliedIdsReq extends Req, MaterialOverrideOpacity {
   readonly all: boolean;
   readonly group: ColorGroup;
 }
@@ -38,6 +42,7 @@ export async function applyGroupsBySuppliedIds({
   apply,
   groups,
   viewer,
+  opacity,
 }: ApplyGroupsBySuppliedIdsReq): Promise<void> {
   if (viewer == null) return;
 
@@ -49,7 +54,7 @@ export async function applyGroupsBySuppliedIds({
       groups.map((g) => {
         const w = op.where((q) => q.withSuppliedIds(g.suppliedIds));
         return apply
-          ? w.materialOverride(ColorMaterial.fromHex(g.color, 178))
+          ? w.materialOverride(ColorMaterial.fromHex(g.color, opacity ?? 255))
           : w.clearMaterialOverrides();
       })
     )
@@ -60,6 +65,7 @@ export async function applyAndShowBySuppliedIds({
   all,
   group: { color, suppliedIds },
   viewer,
+  opacity
 }: ApplyAndShowBySuppliedIdsReq): Promise<void> {
   if (viewer == null || viewer === undefined) {
     return;
@@ -72,7 +78,7 @@ export async function applyAndShowBySuppliedIds({
       ...(all ? [op.where((q) => q.all()).hide()] : []),
       op
         .where((q) => q.withSuppliedIds(suppliedIds))
-        .materialOverride(ColorMaterial.fromHex(color, 178))
+        .materialOverride(ColorMaterial.fromHex(color, opacity ?? 255))
         .show(),
     ])
     .execute();
@@ -103,8 +109,8 @@ export async function handleHit(request: HandleHitReq): Promise<void> {
   const scene = await request.viewer.scene();
   if (scene == null) return;
   const itemId = request.hit?.itemId?.hex;
-  
-  if(itemId){
+
+  if (itemId) {
     await scene
       .items((op) => {
         return [
