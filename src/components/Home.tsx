@@ -33,6 +33,7 @@ import { Layout, RightDrawerWidth } from "./Layout";
 import { encodeCreds } from "../lib/env";
 import { RightDrawer } from "./RightDrawer";
 import { Viewer } from "./Viewer";
+import { MaterialOverrideOpacity } from "../lib/colors";
 
 export interface Props {
   readonly config: Configuration;
@@ -81,6 +82,7 @@ export function Home({ config: { network } }: Props): JSX.Element {
             all,
             group: { color: meta.tsData[ts].color, suppliedIds },
             viewer: viewer.ref.current,
+            opacity: MaterialOverrideOpacity,
           })
         : hideBySuppliedId({
             hide: checked,
@@ -185,6 +187,7 @@ export function Home({ config: { network } }: Props): JSX.Element {
         };
       }),
       viewer: viewer.ref.current,
+      opacity: MaterialOverrideOpacity,
     });
   }
   async function reset(): Promise<void> {
