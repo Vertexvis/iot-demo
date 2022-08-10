@@ -1,5 +1,5 @@
 import type { ColorMaterial } from "@vertexvis/viewer/dist/types/lib/scenes/colorMaterial";
-
+export const MaterialOverrideOpacity: number = 178;
 export const SelectColor: ColorMaterial = {
   opacity: 255,
   glossiness: 4,
