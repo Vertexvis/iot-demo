@@ -214,7 +214,6 @@ export function Home({ config: { network } }: Props): JSX.Element {
             config={JSON.stringify({ network })}
             credentials={credentials}
             onSelect={(hitItems) => {
-              console.info(hitItems);
               const request: HandleHitReq = {
                 hit: hitItems,
                 viewer: viewer.ref.current,
@@ -231,7 +230,6 @@ export function Home({ config: { network } }: Props): JSX.Element {
             assets: getAssets(credentials.streamKey),
             onSelect: async (a: Asset) => {
               setAsset(a);
-              console.log(a);
               const d = getData(a);
               setData(d);
               const tsd = getTimeSeriesData(a, d, sensorMapping);
