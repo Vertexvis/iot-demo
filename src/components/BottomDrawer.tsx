@@ -99,7 +99,7 @@ export function BottomDrawer({
           </ListItem>
         </List>
         <TimeSlider onSelect={onSelect} sensor={sensor} timestamp={timestamp} />
-      </Box> 
+      </Box>
       {content === "data" && (
         <>
           <Typography
@@ -119,7 +119,11 @@ export function BottomDrawer({
       )}
       {content === "chart" && (
         <Box overflow="hidden" height="100%" width="100%">
-          <TimeSeriesChart sensors={sensors} timestamp={timestamp} faultCodes={faultCodes}/>
+          <TimeSeriesChart
+            sensors={sensors}
+            timestamp={timestamp}
+            faultCodes={faultCodes}
+          />
         </Box>
       )}
     </Drawer>
