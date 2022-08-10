@@ -17,7 +17,6 @@ export function TimeSeriesChart({
   faultCodes,
 }: Props): JSX.Element {
   const colors = useOrdinalColorScale({ scheme: "nivo" }, "id");
-  // const sensors =[sensor]
   const rawData = sensors.map((s) => {
     return {
       id: s.meta.id,
