@@ -61,7 +61,7 @@ function UnwrappedViewer({
           viewer={viewer.current ?? undefined}
         />
       </VertexViewerToolbar>
-      <VertexViewerToolbar placement="bottom-right">
+      <VertexViewerToolbar placement="top-left">
         <ViewerSpeedDial viewer={viewer} />
       </VertexViewerToolbar>
     </VertexViewer>
