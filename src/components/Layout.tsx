@@ -6,11 +6,10 @@ import React from "react";
 
 import { easeOutEntering, sharpLeaving } from "../lib/transitions";
 
-export const BottomDrawerHeight = 240;
+export const BottomDrawerHeight = 400;
 export const DenseToolbarHeight = 48;
 export const LeftDrawerWidth = 240;
 export const RightDrawerWidth = 320;
-
 interface Props {
   readonly bottomDrawer?: React.ReactNode;
   readonly bottomDrawerHeight?: number;
@@ -61,7 +60,6 @@ const Main = styled("main", { shouldForwardProp })<
   DrawerProps & { bottomDrawerHeight: number; toolbarHeight: number }
 >(
   ({
-    bottomDrawerHeight,
     leftDrawerWidth,
     rightDrawerWidth,
     theme,
@@ -70,7 +68,7 @@ const Main = styled("main", { shouldForwardProp })<
     const { create } = theme.transitions;
     return {
       flexGrow: 1,
-      height: `calc(100% - ${bottomDrawerHeight + toolbarHeight}px)`,
+      height: `calc(100% - ${toolbarHeight}px)`,
       marginRight: -RightDrawerWidth,
       marginTop: `${toolbarHeight}px`,
       maxWidth: `calc(100% - ${leftDrawerWidth}px)`,
@@ -89,7 +87,6 @@ const Main = styled("main", { shouldForwardProp })<
 
 export function Layout({
   bottomDrawer,
-  bottomDrawerHeight = 0,
   children,
   header,
   leftDrawer,
@@ -113,10 +110,10 @@ export function Layout({
       )}
       {leftDrawer ? leftDrawer : <></>}
       <Main
-        bottomDrawerHeight={bottomDrawerHeight}
         leftDrawerWidth={leftDrawerWidth}
         rightDrawerWidth={rightDrawerWidth}
         toolbarHeight={header ? DenseToolbarHeight : 0}
+        bottomDrawerHeight={BottomDrawerHeight}
       >
         {main}
       </Main>

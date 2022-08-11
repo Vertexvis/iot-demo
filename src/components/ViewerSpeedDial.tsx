@@ -1,3 +1,4 @@
+import { GitHub } from "@mui/icons-material";
 import ZoomOutMapOutlined from "@mui/icons-material/ZoomOutMapOutlined";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
@@ -10,6 +11,12 @@ interface Props {
 
 export function ViewerSpeedDial({ viewer }: Props): JSX.Element {
   const actions: ActionProps[] = [
+    {
+      icon: <GitHub />,
+      name: "View Source Code",
+      onClick:()=>{ window.open('https://github.com/Vertexvis/iot-demo','_blank')}
+
+    },
     {
       icon: <ZoomOutMapOutlined />,
       name: "Fit all",
