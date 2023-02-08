@@ -1182,30 +1182,30 @@
     "@typescript-eslint/types" "5.32.0"
     eslint-visitor-keys "^3.3.0"
 
-"@vertexvis/api-client-node@^0.20.0":
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/@vertexvis/api-client-node/-/api-client-node-0.20.0.tgz#7e222a6e46e1d414876bc2a462522bf4f0298a46"
-  integrity sha512-yYIud4vRMkmTQVLkAztnFkp/mKNpcXJ3RRkJI8XkIrIBmYfPCL7doJagQSg5vOUtiMydM4sNOLXON07a0pixdA==
+"@vertexvis/api-client-node@^0.20.5":
+  version "0.20.5"
+  resolved "https://registry.yarnpkg.com/@vertexvis/api-client-node/-/api-client-node-0.20.5.tgz#2718c39166db12ee6f25e02d886fcc4fbc325f86"
+  integrity sha512-X3s3LlLBSkzlvyz4bk7HxEe6iR0zh4KSE2oDgGhpLuemV0sL10h1Ao614Kz5OcncLWlqgt1LMQ6wNvSctVapNw==
   dependencies:
     axios "^0.27.2"
     p-limit "^3"
 
-"@vertexvis/frame-streaming-protos@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@vertexvis/frame-streaming-protos/-/frame-streaming-protos-0.8.0.tgz#7f7028b4e4269ae66012b56c4594f71542e4e847"
-  integrity sha512-jQssMEKZ/Ji4TCt/QnPX1xi1Fdyu38qeTi8/7ywAQuAZ7gfCZy6vbSJeRlNQ8ITRiHFanKdrehaHaQefJ5+E+w==
+"@vertexvis/frame-streaming-protos@^0.8.8":
+  version "0.8.8"
+  resolved "https://registry.yarnpkg.com/@vertexvis/frame-streaming-protos/-/frame-streaming-protos-0.8.8.tgz#067cb8f9d984e43ef973f089704977acd90c390f"
+  integrity sha512-AYkJYUWPiA4bg47luDl3l75PEbv5YvnUzaf7VDyi3KO0NP2mrwPeBxrXhVWnkOYUxnzZ9ONsMRBD/2Bx++gllw==
 
-"@vertexvis/geometry@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@vertexvis/geometry/-/geometry-0.15.0.tgz#24e6cd5f6834048c0698ae0b3b733ef2106e0169"
-  integrity sha512-dWD2IsIicUBKkuDA8dmVxpsuia6EdgR0tGlDkJ28DSmvAJk9tMc5yCVuAnZKUUamm9IMZpEGUSMJzik89WSMpg==
+"@vertexvis/geometry@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/geometry/-/geometry-0.15.2.tgz#c80aaf7f5579943e7caa42c6e2515a552737f04b"
+  integrity sha512-a9ynXpysiwgp9oqF6ehvJo6ttOkMZbd24itoUM2TSU0Q42UIPY7Z2cEABzwRjN7ukmKONsPQe3JRLdKD4bZn8A==
 
-"@vertexvis/html-templates@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@vertexvis/html-templates/-/html-templates-0.15.0.tgz#cd997e1375e39e61c805425990f52191e1a2e1d2"
-  integrity sha512-GiL9G41LN955WzGdmJwOqH1+e9Io6b3cRjf2f4xsw5/N7BGsKvfA/E/SbwZTy3d5a1MgOct+f5Aqm4bhI8t5Lg==
+"@vertexvis/html-templates@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/html-templates/-/html-templates-0.15.2.tgz#1a8759082f0fd7c9db701248bcce6809f4988563"
+  integrity sha512-jxuey2MFU39a1iBZjVvn2tmAZnT0X68MrWioWrU7okRbDd64CcfLi1pkPec3dKQaZ+sm237COQ72WYiXLP0MsQ==
   dependencies:
-    "@vertexvis/utils" "0.15.0"
+    "@vertexvis/utils" "0.15.2"
 
 "@vertexvis/scene-tree-protos@^0.1.15":
   version "0.1.15"
@@ -1217,44 +1217,44 @@
   resolved "https://registry.yarnpkg.com/@vertexvis/scene-view-protos/-/scene-view-protos-0.1.8.tgz#eb676022c3323b8bbb1198a27cc7ad6849d1ac28"
   integrity sha512-R3HOVRYWTthiwxrndrbSlvqfmqobSvTsmMvohjihqv9toXWAdjRw/uFcL6ei2zQAq18NPenKqxU3hI1sa0MrjQ==
 
-"@vertexvis/stream-api@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@vertexvis/stream-api/-/stream-api-0.15.0.tgz#bdd4ab2f31fceff28a4271a53ca1b1e080f2bbbe"
-  integrity sha512-/5YhUCItTSrqI2eY1Ob8UbFeuiygCJfLfAPmBuyIOSOj7a9aJVgxw507nuqIkU3CTi9baCyU6X3mZy6lzK2Ggg==
+"@vertexvis/stream-api@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/stream-api/-/stream-api-0.15.2.tgz#4bdbd5138aab40868881147783657721dbd66c75"
+  integrity sha512-NjNEgVmq5QEMPOZS60cDS+jVgfQI8Uq7LkCMeex0Cet3zpvltE7PS6tPyy9rpH7aVHXpnZ11XrJjopovGwsabg==
   dependencies:
-    "@vertexvis/frame-streaming-protos" "^0.8.0"
+    "@vertexvis/frame-streaming-protos" "^0.8.8"
 
-"@vertexvis/utils@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@vertexvis/utils/-/utils-0.15.0.tgz#caa60b4b3543b7a26f033d2b001ce4a43eddec53"
-  integrity sha512-G9BiQea7pXZ0nnncTEu0THFqHHDC3KsCUQVOLpBMYfbBgqjJx/ye8DilWAd4LhvB9wmqMsfk/vB6ETaY7WLEeg==
+"@vertexvis/utils@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/utils/-/utils-0.15.2.tgz#d3ca85ce2c1c1d92bc95a732647ca97e7dc73d97"
+  integrity sha512-vxv6RnW/jMKeLwGtLis70sFCVwxDV5FmBiVf/+2K9APxl0qeE958fJDQeyx/DkEcVc6RsB6Ri1C6GPfksagBvQ==
   dependencies:
     is-plain-object "^3.0.0"
     lodash.isequal "^4.5.0"
     uuid "^8.3.2"
 
-"@vertexvis/viewer-react@^0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@vertexvis/viewer-react/-/viewer-react-0.15.0.tgz#8b3f6723f3b537aeac787085737aea5b7624f491"
-  integrity sha512-UNuLH9GeGv13ld7RXkfbWQkM9RvwgfWe6w9QnY0mRytcoLudV4OW460jMF34qJM7UcAK6DQhJMbBbmtCz+cs6Q==
+"@vertexvis/viewer-react@^0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/viewer-react/-/viewer-react-0.15.2.tgz#59f53709b73964669189f5414a9acb62b31d6742"
+  integrity sha512-rQGSBq/FhQpXdKpbZLBs+wzNyFBtUEKz7b5i2w7U43SqpEXuJcpbzpt3x0F/Scu5mjdWPmEaQybtrRFHPZ5PBA==
   dependencies:
-    "@vertexvis/viewer" "0.15.0"
+    "@vertexvis/viewer" "0.15.2"
 
-"@vertexvis/viewer@0.15.0":
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/@vertexvis/viewer/-/viewer-0.15.0.tgz#701f4bb6df636bcad167d48bda1ef68b4055c4b6"
-  integrity sha512-xtHAQ+4hTO27WmbGrvXEewLI5a5IhhQHD0CG6/umbqWnHqOkVPDbbe/yo0cYAar73gmWk5Td+hVkFIUapjJpGQ==
+"@vertexvis/viewer@0.15.2":
+  version "0.15.2"
+  resolved "https://registry.yarnpkg.com/@vertexvis/viewer/-/viewer-0.15.2.tgz#9297cde87c367bcd3efb3a9410b27cd60e456edc"
+  integrity sha512-8Kt/pvT1JfPQgCjfns2O7fQh20y8zVJz1vx79F84aiKbfCgJ+sHThVwbvEhIhTSCVLGW2Iv6TDSZcQhmXgNN9g==
   dependencies:
     "@improbable-eng/grpc-web" "^0.15.0"
     "@stencil/core" "^2.16.1"
     "@types/classnames" "^2.3.1"
-    "@vertexvis/frame-streaming-protos" "^0.8.0"
-    "@vertexvis/geometry" "0.15.0"
-    "@vertexvis/html-templates" "0.15.0"
+    "@vertexvis/frame-streaming-protos" "^0.8.8"
+    "@vertexvis/geometry" "0.15.2"
+    "@vertexvis/html-templates" "0.15.2"
     "@vertexvis/scene-tree-protos" "^0.1.15"
     "@vertexvis/scene-view-protos" "^0.1.8"
-    "@vertexvis/stream-api" "0.15.0"
-    "@vertexvis/utils" "0.15.0"
+    "@vertexvis/stream-api" "0.15.2"
+    "@vertexvis/utils" "0.15.2"
     "@vertexvis/web-workers" "^0.1.0"
     camel-case "^4.1.2"
     classnames "^2.3.1"
